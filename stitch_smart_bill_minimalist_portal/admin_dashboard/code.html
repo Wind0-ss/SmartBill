@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Bill Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f9f9ff",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "max-width": "1280px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f9f9ff;
+        color: #111c2d;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .card-shadow {
+        box-shadow: 0px 4px 12px rgba(30, 41, 59, 0.03);
+        border: 1px solid #e2e8f0;
+      }
+      .card-hover:hover {
+        box-shadow: 0px 8px 20px rgba(30, 41, 59, 0.06);
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="bg-surface border-b border-outline-variant sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="text-headline-md font-headline-md font-extrabold text-primary">Smart Bill</span>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-primary border-b-2 border-primary font-bold pb-1 text-label-md font-label-md" href="#">Overview</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Rooms</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Meters</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors" title="Toggle Dark Mode">
+<span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a senior property administrator with a neutral, welcoming expression. The lighting is soft and corporate, set against a blurred modern office background with clean architectural lines. The image maintains a minimalist and efficient aesthetic consistent with the Smart Bill brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSZpgL7d53u4_bfQ1xwIiKXsCoiY533u6cYT7ZjV1W5AuBegLUXKxfmDPCi8dmNaHVV2wwozfVZepGJBCgf4Uz4jJ2mHM47r58S8SkLhONICQENJjnzoKRTFB2uHpZLejcF4Vm9YwPTZa0CTPN2PBe97fUP2tsryKXd_1UlyzwH-O52WOE3QypZxtX-8GbI5Tef2pLgDjFeITUqrthGEGHzi5eCsF79DQfSmZZPKYfGiL7GWrIPlv-I1ITSFe3RdIXieVA4Q-SqSo"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-lg md:px-margin-desktop py-xl space-y-xl">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Admin Dashboard</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Overview of your property's financial health and utility usage.</p>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-low p-1 rounded-lg border border-outline-variant">
+<button class="px-md py-sm bg-surface rounded-md shadow-sm text-label-md font-label-md text-primary">Monthly</button>
+<button class="px-md py-sm text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors">Quarterly</button>
+<button class="px-md py-sm text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors">Yearly</button>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Revenue Card -->
+<div class="bg-surface p-lg rounded-xl card-shadow card-hover flex flex-col justify-between h-48">
+<div>
+<span class="text-label-md font-label-md text-on-surface-variant">ยอดเก็บเงินแล้ว</span>
+<h2 class="text-display-lg font-display-lg text-primary mt-sm">฿142,500</h2>
+</div>
+<div class="space-y-sm">
+<div class="flex justify-between text-label-sm font-label-sm text-on-surface-variant">
+<span>Progress to target</span>
+<span>85%</span>
+</div>
+<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim w-[85%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Rooms Status Card -->
+<div class="bg-surface p-lg rounded-xl card-shadow card-hover flex flex-col justify-between h-48">
+<div>
+<span class="text-label-md font-label-md text-on-surface-variant">สถานะบิลแยกตามห้อง</span>
+<div class="flex items-baseline gap-sm mt-sm">
+<h2 class="text-display-lg font-display-lg text-error">4</h2>
+<span class="text-body-md font-body-md text-on-surface-variant">Overdue</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-secondary-fixed-dim"></div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">24 Paid</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-tertiary-fixed-dim"></div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">12 Pending</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">4 Empty</span>
+</div>
+</div>
+</div>
+<!-- Units Usage Card -->
+<div class="bg-surface p-lg rounded-xl card-shadow card-hover flex flex-col justify-between h-48">
+<div>
+<span class="text-label-md font-label-md text-on-surface-variant">หน่วยรวมน้ำและไฟ</span>
+<div class="grid grid-cols-2 gap-md mt-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-xs text-primary">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Electricity</span>
+</div>
+<span class="text-headline-md font-headline-md font-bold">1,240 <span class="text-body-sm">kWh</span></span>
+</div>
+<div class="flex flex-col border-l border-outline-variant pl-md">
+<div class="flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Water</span>
+</div>
+<span class="text-headline-md font-headline-md font-bold">450 <span class="text-body-sm">m³</span></span>
+</div>
+</div>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant italic">Refreshed: Today at 08:00 AM</p>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Left Column: Room List -->
+<div class="lg:col-span-2 space-y-lg">
+<div class="bg-surface rounded-xl card-shadow overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-headline-md font-headline-md text-on-surface">Recent Room Activity</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="pl-10 pr-md py-sm bg-surface border border-outline-variant rounded-lg text-body-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all w-64" placeholder="Search room or name..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-on-surface-variant uppercase text-label-sm tracking-wider">
+<th class="px-lg py-md font-semibold">Room #</th>
+<th class="px-lg py-md font-semibold">Tenant Name</th>
+<th class="px-lg py-md font-semibold">Total Bill</th>
+<th class="px-lg py-md font-semibold">Status</th>
+<th class="px-lg py-md font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="text-body-sm text-on-surface">
+<tr class="bg-white hover:bg-surface-container-lowest transition-colors border-b border-outline-variant/30">
+<td class="px-lg py-md font-bold">101</td>
+<td class="px-lg py-md">Somchai Rakdee</td>
+<td class="px-lg py-md">฿4,250.00</td>
+<td class="px-lg py-md">
+<span class="px-sm py-1 rounded-full bg-secondary-fixed-dim/20 text-secondary text-label-sm">Paid</span>
+</td>
+<td class="px-lg py-md text-right space-x-sm">
+<button class="text-primary hover:underline font-medium">Approve</button>
+<button class="p-1 rounded-md bg-green-50 text-green-600 hover:bg-green-100" title="Send LINE">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low hover:bg-surface-container-lowest transition-colors border-b border-outline-variant/30">
+<td class="px-lg py-md font-bold">102</td>
+<td class="px-lg py-md">Wipa Jaisabai</td>
+<td class="px-lg py-md">฿3,800.00</td>
+<td class="px-lg py-md">
+<span class="px-sm py-1 rounded-full bg-error-container text-error text-label-sm">Overdue</span>
+</td>
+<td class="px-lg py-md text-right space-x-sm">
+<button class="text-primary hover:underline font-medium">Approve</button>
+<button class="p-1 rounded-md bg-green-50 text-green-600 hover:bg-green-100" title="Send LINE">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</td>
+</tr>
+<tr class="bg-white hover:bg-surface-container-lowest transition-colors border-b border-outline-variant/30">
+<td class="px-lg py-md font-bold">103</td>
+<td class="px-lg py-md">Arun Siri</td>
+<td class="px-lg py-md">฿5,120.00</td>
+<td class="px-lg py-md">
+<span class="px-sm py-1 rounded-full bg-tertiary-fixed-dim/20 text-tertiary text-label-sm">Pending</span>
+</td>
+<td class="px-lg py-md text-right space-x-sm">
+<button class="text-primary hover:underline font-medium font-bold">Approve</button>
+<button class="p-1 rounded-md bg-green-50 text-green-600 hover:bg-green-100" title="Send LINE">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low hover:bg-surface-container-lowest transition-colors border-b border-outline-variant/30">
+<td class="px-lg py-md font-bold">104</td>
+<td class="px-lg py-md">Mana Manee</td>
+<td class="px-lg py-md">฿4,400.00</td>
+<td class="px-lg py-md">
+<span class="px-sm py-1 rounded-full bg-secondary-fixed-dim/20 text-secondary text-label-sm">Paid</span>
+</td>
+<td class="px-lg py-md text-right space-x-sm">
+<button class="text-primary hover:underline font-medium">Approve</button>
+<button class="p-1 rounded-md bg-green-50 text-green-600 hover:bg-green-100" title="Send LINE">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</td>
+</tr>
+<tr class="bg-white hover:bg-surface-container-lowest transition-colors">
+<td class="px-lg py-md font-bold">105</td>
+<td class="px-lg py-md">Napa Sky</td>
+<td class="px-lg py-md">฿4,900.00</td>
+<td class="px-lg py-md">
+<span class="px-sm py-1 rounded-full bg-secondary-fixed-dim/20 text-secondary text-label-sm">Paid</span>
+</td>
+<td class="px-lg py-md text-right space-x-sm">
+<button class="text-primary hover:underline font-medium">Approve</button>
+<button class="p-1 rounded-md bg-green-50 text-green-600 hover:bg-green-100" title="Send LINE">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-lg py-md bg-surface-container-lowest border-t border-outline-variant flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">Showing 5 of 40 rooms</span>
+<div class="flex gap-sm">
+<button class="px-md py-1 border border-outline-variant rounded-md text-label-sm disabled:opacity-50" disabled="">Previous</button>
+<button class="px-md py-1 border border-outline-variant bg-surface rounded-md text-label-sm hover:bg-surface-container-low">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Form & Analyzer -->
+<div class="space-y-lg">
+<!-- Building Total Meter Input -->
+<div class="bg-surface rounded-xl card-shadow p-lg space-y-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="text-headline-md font-headline-md text-on-surface">Building Totals</h3>
+</div>
+<form class="space-y-md">
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">Building Electricity Total (kWh)</label>
+<input class="w-full px-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" placeholder="Enter meter reading" type="number"/>
+</div>
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">Building Water Total (m³)</label>
+<input class="w-full px-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg text-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" placeholder="Enter meter reading" type="number"/>
+</div>
+<button class="w-full bg-primary text-white py-sm rounded-lg font-bold hover:bg-primary-container transition-all shadow-sm" type="submit">Save &amp; Calculate Leakage</button>
+</form>
+</div>
+<!-- Leakage Analyzer -->
+<div class="bg-surface rounded-xl card-shadow p-lg space-y-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-[80px]">health_and_safety</span>
+</div>
+<div class="space-y-sm">
+<h3 class="text-headline-md font-headline-md text-on-surface">Leakage Analyzer</h3>
+<p class="text-body-sm text-on-surface-variant">Comparison of main building meters vs. sum of all tenant meters.</p>
+</div>
+<div class="space-y-lg">
+<!-- Electricity Result -->
+<div class="p-md rounded-lg border border-outline-variant bg-surface-container-low flex justify-between items-center">
+<div>
+<span class="text-label-sm font-label-sm uppercase text-on-surface-variant">Electricity Delta</span>
+<div class="flex items-baseline gap-xs">
+<span class="text-headline-md font-bold">12</span>
+<span class="text-body-sm">kWh</span>
+</div>
+</div>
+<span class="px-md py-1 rounded-full bg-secondary-fixed-dim/20 text-secondary text-label-sm font-bold uppercase tracking-tighter">Normal</span>
+</div>
+<!-- Water Result -->
+<div class="p-md rounded-lg border border-outline-variant bg-surface-container-low flex justify-between items-center border-l-4 border-l-error">
+<div>
+<span class="text-label-sm font-label-sm uppercase text-on-surface-variant">Water Delta</span>
+<div class="flex items-baseline gap-xs">
+<span class="text-headline-md font-bold text-error">45</span>
+<span class="text-body-sm text-error">m³</span>
+</div>
+</div>
+<span class="px-md py-1 rounded-full bg-error-container text-error text-label-sm font-bold uppercase tracking-tighter">Leak Detected</span>
+</div>
+</div>
+<div class="pt-sm border-t border-outline-variant">
+<button class="text-primary text-label-md font-label-md flex items-center gap-xs hover:gap-md transition-all">
+                            View Detailed Audit Logs
+                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-lg px-margin-desktop max-w-max-width mx-auto gap-md">
+<div class="flex flex-col items-center md:items-start">
+<span class="text-label-md font-label-md font-bold text-on-surface">Smart Bill</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">© 2024 Smart Bill. Minimalist Property Management.</p>
+</div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for button active states
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('opacity-80', 'scale-[0.98]');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('opacity-80', 'scale-[0.98]');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('opacity-80', 'scale-[0.98]');
+            });
+        });
+    </script>
+</body></html>

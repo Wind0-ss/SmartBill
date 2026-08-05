@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Settings - Smart Bill</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f9f9ff",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "max-width": "1280px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0px 4px 12px rgba(30, 41, 59, 0.03);
+        }
+        .input-box {
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .input-box:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="bg-surface border-b border-outline-variant w-full sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="text-headline-md font-headline-md font-extrabold text-primary">Smart Bill</span>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Overview</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Rooms</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Meters</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 text-label-md font-label-md" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden md:flex items-center bg-surface-container-low px-md py-sm rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-outline mr-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm font-body-sm w-48" placeholder="Search..." type="text"/>
+</div>
+<button class="p-sm hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">dark_mode</span>
+</button>
+<button class="p-sm hover:bg-surface-container rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A clean, professional headshot of a corporate administrator in a minimalist studio setting. The lighting is soft and even, highlighting a friendly but authoritative expression. The background is a solid, neutral light gray, maintaining the modern corporate aesthetic of the dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaHAJUlNxlYvgHl6PYubkDn2LZDpv-5xwOsQv1J-BnAzWKpBGW1qx0p3ldQp_0QmMSx3W1UhcskYzDCi8OSLA1XAsSIyliJPrB0CrPfBZcL4VlGTeHh66X87e_Sdxset5CljFZB2ARkKEilrFQBDECqEIrvqdoD3dTS6bkXbhManvBcc4a5vvumbIBmrDrkavC8d82-iIbMUuxa83zp0NXcqNMr1GeCxB9JUNrYPJ8oQBJ_rrjDQy7HQKRSJGJr_pR1CXsQfjofwA"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+<div class="mb-lg">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">System Settings</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Configure utility rates and external API integrations for property automation.</p>
+</div>
+<!-- 2-Card Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start">
+<!-- Left Card: Settings Form -->
+<section class="lg:col-span-7 glass-card rounded-xl p-lg">
+<div class="flex items-center gap-md mb-xl">
+<span class="material-symbols-outlined text-primary p-sm bg-primary-container/10 rounded-lg">tune</span>
+<h2 class="text-headline-md font-headline-md">General Configurations</h2>
+</div>
+<form class="space-y-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">Water Rate (per Unit)</label>
+<div class="relative">
+<input class="input-box w-full rounded-lg px-md py-md text-body-md font-body-md pr-12" placeholder="0.00" step="0.01" type="number" value="18.00"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-label-sm font-label-sm text-outline">THB</span>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">Electric Rate (per Unit)</label>
+<div class="relative">
+<input class="input-box w-full rounded-lg px-md py-md text-body-md font-body-md pr-12" placeholder="0.00" step="0.01" type="number" value="7.50"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-label-sm font-label-sm text-outline">THB</span>
+</div>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">PromptPay Number</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">payments</span>
+<input class="input-box w-full rounded-lg pl-12 pr-md py-md text-body-md font-body-md" placeholder="Enter PromptPay ID" type="text" value="081-234-5678"/>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant">LINE Messaging API Key</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">api</span>
+<input class="input-box w-full rounded-lg pl-12 pr-md py-md text-body-md font-body-md" placeholder="Enter Channel Access Token" type="password" value="sk_test_51MzS2IByR8"/>
+</div>
+<p class="text-body-sm font-body-sm text-outline">Used for automated bill notifications and bot interactions.</p>
+</div>
+<div class="pt-md border-t border-outline-variant">
+<button class="bg-inverse-surface text-on-primary-container px-xl py-md rounded-lg font-bold text-label-md font-label-md hover:bg-on-surface-variant transition-all flex items-center gap-sm" type="submit">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                            บันทึกการตั้งค่า
+                        </button>
+</div>
+</form>
+</section>
+<!-- Right Card: LINE Connection Guide -->
+<section class="lg:col-span-5 glass-card rounded-xl p-lg">
+<div class="flex items-center gap-md mb-xl">
+<span class="material-symbols-outlined text-secondary p-sm bg-secondary-container/10 rounded-lg">integration_instructions</span>
+<h2 class="text-headline-md font-headline-md">LINE Connection Guide</h2>
+</div>
+<div class="space-y-md mb-xl">
+<div class="flex gap-md">
+<div class="w-6 h-6 rounded-full bg-outline-variant flex items-center justify-center flex-shrink-0 text-label-sm font-label-sm">1</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Login to <a class="text-primary hover:underline" href="#">LINE Developers Console</a></p>
+</div>
+<div class="flex gap-md">
+<div class="w-6 h-6 rounded-full bg-outline-variant flex items-center justify-center flex-shrink-0 text-label-sm font-label-sm">2</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Select your Provider and Channel (Messaging API)</p>
+</div>
+<div class="flex gap-md">
+<div class="w-6 h-6 rounded-full bg-outline-variant flex items-center justify-center flex-shrink-0 text-label-sm font-label-sm">3</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Copy the <strong>Webhook URL</strong> below and paste it into the Webhook settings.</p>
+</div>
+<div class="flex gap-md">
+<div class="w-6 h-6 rounded-full bg-outline-variant flex items-center justify-center flex-shrink-0 text-label-sm font-label-sm">4</div>
+<p class="text-body-md font-body-md text-on-surface-variant">Enable "Use Webhooks" in the LINE Console.</p>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="text-label-md font-label-md text-on-surface-variant">Your Webhook Endpoint</label>
+<div class="flex flex-col sm:flex-row items-stretch gap-sm">
+<div class="flex-grow bg-surface-container-lowest border border-outline-variant rounded-lg px-md py-md font-mono text-body-sm font-body-sm text-outline truncate select-all">
+                            https://api.smartbill.io/webhook/v1/line/38291
+                        </div>
+<button class="bg-surface-container-high border border-outline-variant px-lg py-md rounded-lg font-bold text-label-md font-label-md hover:bg-outline-variant transition-colors flex items-center justify-center gap-sm whitespace-nowrap" onclick="copyToClipboard(this)">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+                            Copy
+                        </button>
+</div>
+</div>
+<div class="mt-xl p-md bg-secondary-container/5 rounded-xl border border-secondary/10">
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-secondary">verified</span>
+<div>
+<p class="text-label-md font-label-md text-secondary">Connection Status</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Integration is currently active and receiving events.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- System Logs Section (Minimal List) -->
+<section class="mt-xl glass-card rounded-xl overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="text-label-md font-label-md font-bold uppercase tracking-wider text-outline">Recent System Activity</h3>
+<button class="text-primary text-label-sm font-label-sm hover:underline">View All Logs</button>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="px-lg py-md flex justify-between items-center hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">update</span>
+<p class="text-body-md font-body-md">Water rate updated from 17.50 to 18.00</p>
+</div>
+<span class="text-body-sm font-body-sm text-outline">10 mins ago</span>
+</div>
+<div class="px-lg py-md flex justify-between items-center hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-secondary">link</span>
+<p class="text-body-md font-body-md">LINE API Webhook verified successfully</p>
+</div>
+<span class="text-body-sm font-body-sm text-outline">2 hours ago</span>
+</div>
+<div class="px-lg py-md flex justify-between items-center hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-outline">person_outline</span>
+<p class="text-body-md font-body-md">Admin settings changed by User #120</p>
+</div>
+<span class="text-body-sm font-body-sm text-outline">Yesterday</span>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-low border-t border-outline-variant w-full mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-lg px-margin-desktop max-w-max-width mx-auto gap-md">
+<span class="text-label-md font-label-md font-bold text-on-surface">Smart Bill</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant">© 2024 Smart Bill. Minimalist Property Management.</p>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<script>
+        function copyToClipboard(btn) {
+            const text = "https://api.smartbill.io/webhook/v1/line/38291";
+            navigator.clipboard.writeText(text).then(() => {
+                const originalContent = btn.innerHTML;
+                btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">check</span> Copied!`;
+                btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+                }, 2000);
+            });
+        }
+    </script>
+</body></html>

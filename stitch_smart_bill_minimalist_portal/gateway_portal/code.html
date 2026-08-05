@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="light" lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Bill - Gateway Portal</title>
+<!-- Google Fonts: Inter & Sarabun for Thai readability -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Sarabun:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f8fafc",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "xl": "40px",
+                    "max-width": "1280px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter", "Sarabun", "sans-serif"],
+                    "headline-lg": ["Inter", "Sarabun", "sans-serif"],
+                    "headline-md": ["Inter", "Sarabun", "sans-serif"],
+                    "body-md": ["Inter", "Sarabun", "sans-serif"],
+                    "body-sm": ["Inter", "Sarabun", "sans-serif"],
+                    "label-md": ["Inter", "Sarabun", "sans-serif"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', 'Sarabun', sans-serif;
+            background-color: #f8fafc; /* Forced requirement from prompt */
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        /* Custom subtle shadow for Level 1 Card as per design system */
+        .card-shadow {
+            box-shadow: 0px 4px 12px rgba(30, 41, 59, 0.03);
+            border: 1px solid #e2e8f0;
+        }
+        .gateway-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+        .transition-all-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<main class="gateway-container">
+<!-- Vertical White Card (Bento-style centered) -->
+<div class="bg-white rounded-xl card-shadow w-full max-w-[440px] px-lg py-xl flex flex-col items-center animate-fade-in">
+<!-- Logo & Name Section -->
+<div class="flex flex-col items-center mb-lg">
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mb-md">
+<span class="material-symbols-outlined text-primary text-[32px]">receipt_long</span>
+</div>
+<h1 class="text-headline-md font-headline-md font-extrabold text-primary tracking-tight">Smart Bill</h1>
+<p class="text-on-surface-variant font-body-sm text-sm mt-xs">ระบบตรวจสอบค่าน้ำและค่าไฟของห้องพัก</p>
+</div>
+<!-- Image Asset for Branding -->
+<div class="w-full mb-lg overflow-hidden rounded-lg aspect-[16/9]">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist 3D rendering of a modern apartment building exterior during a bright sunny day. The style is architectural visualization with soft shadows and a pristine light-gray color palette. Subtle blue accents appear in the glass reflections, evoking a sense of clarity, financial transparency, and organized property management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrQ5ly62dQBlYA2iZ_iTw8YayjEd0cfx7tZTZ-1-EDB1OErsIcyJCF6sCjIJBdcCF2XAPPGnzXG66WJx4lqiTf1YdTnF_2VglVqPjnI86PldPKcZA2Mx6dCqVZ4T0z9iN--5Ykk7hL8NQjgT2OAM1id1e2Vw3bqVMJVzEOskgqPNtS4jt4tNns7HVoUiwrqOFbjwkdZlG7LabIjcuNXLywZnTQfMgT3upX84_sk2ytM8E-j5GCu6S-MFsycqW4ZKIpxgno3lS5NSM"/>
+</div>
+<!-- Tenant Search Section -->
+<div class="w-full space-y-md">
+<div class="space-y-xs">
+<label class="text-label-md font-label-md text-on-surface-variant block ml-1" for="room_number">หมายเลขห้องพัก</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline-variant">meeting_room</span>
+<input class="w-full pl-xl pr-md py-md bg-surface-bright border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-outline-variant transition-all-custom" id="room_number" name="room_number" placeholder="เช่น 101, A205" type="text"/>
+</div>
+</div>
+<button class="w-full bg-[#bfdbfe] hover:bg-[#93c5fd] text-primary font-bold py-md px-lg rounded-lg transition-all-custom flex items-center justify-center gap-sm active:scale-[0.98]">
+<span>ค้นหาบิลของฉัน</span>
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+<!-- Divider -->
+<div class="w-full flex items-center my-lg">
+<div class="flex-grow border-t border-outline-variant opacity-50"></div>
+<span class="px-md text-body-sm text-outline font-medium">หรือ</span>
+<div class="flex-grow border-t border-outline-variant opacity-50"></div>
+</div>
+<!-- Landlord Access Section -->
+<div class="w-full">
+<a class="w-full flex items-center justify-center gap-sm border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-md py-md px-lg rounded-lg transition-all-custom" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span>หน้าจัดการระบบแอดมิน</span>
+</a>
+</div>
+<!-- Footer Small Text -->
+<p class="mt-xl text-[12px] text-outline text-center">
+                © 2024 Smart Bill. Minimalist Property Management.
+            </p>
+</div>
+</main>
+<!-- Footer Content (Based on Shared Components JSON) - Hidden or Minimal on Portal -->
+<!-- We skip the full TopNavBar/Footer as requested for Transactional/Portal screen focus -->
+<script>
+        // Simple Interaction Logic
+        const roomInput = document.getElementById('room_number');
+        const searchBtn = document.querySelector('button');
+
+        searchBtn.addEventListener('click', () => {
+            if (roomInput.value.trim() === "") {
+                roomInput.classList.add('border-error');
+                setTimeout(() => roomInput.classList.remove('border-error'), 1000);
+            } else {
+                // Simulate Loading
+                searchBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span><span>กำลังค้นหา...</span>';
+                setTimeout(() => {
+                    searchBtn.innerHTML = '<span>ค้นหาบิลของฉัน</span><span class="material-symbols-outlined">search</span>';
+                    alert('ไม่พบข้อมูลห้อง ' + roomInput.value + ' ในระบบปัจจุบัน');
+                }, 1500);
+            }
+        });
+
+        // Focus transition enhancement
+        roomInput.addEventListener('focus', () => {
+            roomInput.parentElement.querySelector('.material-symbols-outlined').style.color = '#0058be';
+        });
+        roomInput.addEventListener('blur', () => {
+            roomInput.parentElement.querySelector('.material-symbols-outlined').style.color = '#c2c6d6';
+        });
+    </script>
+</body></html>

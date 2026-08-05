@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Bill - Room Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9ff;
+        }
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#727785",
+                        "secondary-container": "#6cf8bb",
+                        "inverse-primary": "#adc6ff",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#002113",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "surface-container-high": "#dee8ff",
+                        "on-secondary-container": "#00714d",
+                        "on-surface-variant": "#424754",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c2c6d6",
+                        "surface-tint": "#005ac2",
+                        "surface-dim": "#cfdaf2",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#001a42",
+                        "surface-variant": "#d8e3fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f0f3ff",
+                        "surface-bright": "#f9f9ff",
+                        "surface": "#f9f9ff",
+                        "primary": "#0058be",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-tertiary-container": "#fffbff",
+                        "background": "#f9f9ff",
+                        "on-surface": "#111c2d",
+                        "tertiary-container": "#b75b00",
+                        "surface-container-highest": "#d8e3fb",
+                        "on-primary-container": "#fefcff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "primary-container": "#2170e4",
+                        "primary-fixed": "#d8e2ff",
+                        "on-background": "#111c2d",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#924700",
+                        "on-tertiary-fixed": "#311300",
+                        "tertiary-fixed": "#ffdcc6",
+                        "secondary": "#006c49",
+                        "surface-container": "#e7eeff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb786"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "xs": "4px",
+                        "margin-desktop": "48px",
+                        "lg": "24px",
+                        "max-width": "1280px",
+                        "xl": "40px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar Shell -->
+<header class="bg-surface border-b border-outline-variant w-full sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto h-20">
+<div class="text-headline-md font-headline-md font-extrabold text-primary">Smart Bill</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md" href="#">Overview</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 text-label-md" href="#">Rooms</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md" href="#">Meters</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="dark_mode">dark_mode</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a minimalist property manager with a clean, high-key studio background. The manager is wearing a modern navy blue blazer and has a friendly, trustworthy expression. The lighting is soft and even, highlighting the clear and precise branding of the property management service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuBbhEI7S9utyKhMuMQjGqvqfz37DiKNN12pqCXt7h2j9G2DlLCkGAg3qeGwwVxLoDbEBEGtRcZX48bVi3v2q_b2PYnrDkTppYBoSSWcv27WH6iKjlOxs9EFAoWsXHm5PWIjGkGTBlWvsgRohEQM5pKOHvc_-kUOx5tVOYy7URWm-QCcsQaIqakVELo1R5ZiWiBa-IAehneqntjPkMXVi7AosAcKOTg5nj0QEX8lZpm-VdlCS9KnncIFIUDiNdhstSczOA_fZfbD8"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-lg md:px-margin-desktop py-xl">
+<div class="flex flex-col md:flex-row items-start gap-lg">
+<!-- Left Column: Add Room -->
+<aside class="w-full md:w-1/3">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<h2 class="text-headline-md font-headline-md mb-md text-on-surface">Add New Room</h2>
+<p class="text-body-sm text-on-surface-variant mb-lg">Register a new tenant and define billing parameters.</p>
+<form class="space-y-md">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Tenant Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="e.g. John Doe" type="text"/>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Phone Number</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="08X-XXX-XXXX" type="tel"/>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Base Rent</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="฿" type="number"/>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Other Services</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="฿" type="number"/>
+</div>
+</div>
+<button class="w-full bg-inverse-surface text-on-primary py-md rounded-lg font-bold hover:opacity-90 transition-opacity mt-lg" type="submit">บันทึกห้อง</button>
+</form>
+</div>
+<!-- Atmospheric Visual -->
+<div class="mt-lg relative h-48 rounded-xl overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="A minimalist architectural shot of a modern apartment corridor with clean white walls and soft natural light streaming in from the ceiling. The floor is a light-colored polished concrete. The atmosphere is peaceful, organized, and professionally managed, reflecting the efficiency of the property management software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_jgGDPtJkoM7sJPhmRDK_Ce7MJrqSXrbLjqwucMUanpy-K_2-TMyogVO-6o6zoqccDtqmP9KK8pJmta60bVMpvs1pg7TTJ1SZJ1pD_K5096Iuli6F0j_9esYHGIeTH7zc9wCEav3kBQIAmVv71rCDqRiuys0hRRzV2wPBFx7NORkX8A58-q9xKBxe8SE9CWt5KgNJ9w1h7_7FrvFWktToPW26Zr7S5cxx2ZYPBEOg50E7lMoTahqhjcWhOCndx-G1fulkzbopsYA"/>
+</div>
+</aside>
+<!-- Right Column: Room Table -->
+<section class="w-full md:w-2/3">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="text-headline-md font-headline-md text-on-surface">Manage Rooms</h3>
+<div class="flex gap-sm">
+<span class="px-md py-1 bg-secondary-container/20 text-on-secondary-container text-label-sm rounded-full">32 Occupied</span>
+<span class="px-md py-1 bg-outline-variant/30 text-on-surface-variant text-label-sm rounded-full">4 Available</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-lg py-md text-label-md text-on-surface-variant border-b border-outline-variant">Room #</th>
+<th class="px-lg py-md text-label-md text-on-surface-variant border-b border-outline-variant">Tenant &amp; Contact</th>
+<th class="px-lg py-md text-label-md text-on-surface-variant border-b border-outline-variant">Rent Total</th>
+<th class="px-lg py-md text-label-md text-on-surface-variant border-b border-outline-variant text-center">LINE</th>
+<th class="px-lg py-md text-label-md text-on-surface-variant border-b border-outline-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-lg py-lg font-bold text-primary">101</td>
+<td class="px-lg py-lg">
+<div class="text-label-md text-on-surface">Somchai Rakdee</div>
+<div class="text-body-sm text-on-surface-variant">081-234-5678</div>
+</td>
+<td class="px-lg py-lg text-body-md font-medium">฿5,500</td>
+<td class="px-lg py-lg text-center">
+<span class="material-symbols-outlined text-[#06C755]" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors" onclick="openModal('101', 'Somchai Rakdee')"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-sm text-error/60 hover:text-error transition-colors ml-sm"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-lg py-lg font-bold text-primary">102</td>
+<td class="px-lg py-lg">
+<div class="text-label-md text-on-surface">Wipada Sangmanee</div>
+<div class="text-body-sm text-on-surface-variant">089-987-6543</div>
+</td>
+<td class="px-lg py-lg text-body-md font-medium">฿5,500</td>
+<td class="px-lg py-lg text-center">
+<span class="material-symbols-outlined text-outline-variant">chat_bubble</span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors" onclick="openModal('102', 'Wipada Sangmanee')"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-sm text-error/60 hover:text-error transition-colors ml-sm"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-lg py-lg font-bold text-primary">201</td>
+<td class="px-lg py-lg">
+<div class="text-label-md text-on-surface">Kitti Jaidee</div>
+<div class="text-body-sm text-on-surface-variant">086-555-4321</div>
+</td>
+<td class="px-lg py-lg text-body-md font-medium">฿6,200</td>
+<td class="px-lg py-lg text-center">
+<span class="material-symbols-outlined text-[#06C755]" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors" onclick="openModal('201', 'Kitti Jaidee')"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-sm text-error/60 hover:text-error transition-colors ml-sm"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-lg py-lg font-bold text-primary">202</td>
+<td class="px-lg py-lg">
+<div class="text-label-md text-on-surface">Vacant</div>
+<div class="text-body-sm text-on-surface-variant">-</div>
+</td>
+<td class="px-lg py-lg text-body-md font-medium">฿6,000</td>
+<td class="px-lg py-lg text-center">
+<span class="material-symbols-outlined text-outline-variant">chat_bubble</span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors" onclick="openModal('202', 'Vacant')"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-sm text-error/60 hover:text-error transition-colors ml-sm"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-lg py-md border-t border-outline-variant flex justify-center bg-surface-container-low">
+<nav class="flex gap-sm">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-on-primary text-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-variant transition-colors text-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-variant transition-colors text-label-sm">3</button>
+</nav>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-surface-container-low border-t border-outline-variant w-full mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-lg px-margin-desktop max-w-max-width mx-auto gap-md">
+<div class="text-label-md font-label-md font-bold text-on-surface">Smart Bill</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">© 2024 Smart Bill. Minimalist Property Management.</p>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<!-- Edit Modal -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-on-surface/40 backdrop-blur-sm transition-opacity opacity-0" id="editModal">
+<div class="bg-surface-container-lowest w-full max-w-md rounded-xl shadow-xl overflow-hidden transform scale-95 transition-transform duration-300">
+<div class="p-lg border-b border-outline-variant flex justify-between items-center">
+<h3 class="text-headline-md font-headline-md text-on-surface">Edit Room <span class="text-primary" id="modalRoomNum"></span></h3>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface" onclick="closeModal()">close</button>
+</div>
+<div class="p-lg space-y-md">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Tenant Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary outline-none" id="modalTenantName" type="text"/>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Phone Number</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary outline-none" id="modalPhone" type="tel" value="08X-XXX-XXXX"/>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Base Rent</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary outline-none" type="number" value="5500"/>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-xs">Other Services</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:ring-2 focus:ring-primary outline-none" type="number" value="300"/>
+</div>
+</div>
+</div>
+<div class="p-lg bg-surface-container-low flex justify-end gap-md">
+<button class="px-lg py-md text-on-surface-variant font-bold hover:text-on-surface transition-colors" onclick="closeModal()">Cancel</button>
+<button class="px-lg py-md bg-primary text-on-primary rounded-lg font-bold hover:bg-primary-container transition-colors shadow-sm" onclick="closeModal()">Update Room</button>
+</div>
+</div>
+</div>
+<script>
+        function openModal(roomNum, tenantName) {
+            const modal = document.getElementById('editModal');
+            const roomSpan = document.getElementById('modalRoomNum');
+            const tenantInput = document.getElementById('modalTenantName');
+            
+            roomSpan.textContent = roomNum;
+            tenantInput.value = tenantName === 'Vacant' ? '' : tenantName;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.remove('opacity-100');
+            modal.firstElementChild.classList.remove('scale-100');
+            modal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Handle escape key to close modal
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body></html>

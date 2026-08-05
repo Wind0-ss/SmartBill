@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Bill - Payment Verification</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f9f9ff",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "max-width": "1280px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+        .shadow-soft {
+            box-shadow: 0px 4px 12px rgba(30, 41, 59, 0.03);
+        }
+        .shadow-hover {
+            box-shadow: 0px 8px 20px rgba(30, 41, 59, 0.06);
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-surface border-b border-outline-variant w-full sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto py-md">
+<div class="text-headline-md font-headline-md font-extrabold text-primary">Smart Bill</div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Overview</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Rooms</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 text-label-md font-label-md" href="#">Meters</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant p-sm hover:bg-surface-container rounded-full">dark_mode</button>
+<button class="material-symbols-outlined text-on-surface-variant p-sm hover:bg-surface-container rounded-full">notifications</button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a property manager in a corporate but friendly setting. The background is a clean, minimalist office with soft lighting and neutral tones. The style is modern and high-resolution, maintaining the light-mode corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr5osv64lYLGqiJRaSgVaeTX5vPAzP_RDiznPVFBWDptg6fBPEDobi7_xCgIlAsJKtN5fMuTd4fL5ukPkFFw1hskiLAIUbKQXIX6GSgBLRjMtv-cKjsZFdyISCo7YOO7-61OxwmOabwhCFlsFTlS13VJo8wZ_xrFv3fxDuqHYekIx1C-PP8Kc89ccYlmhZhGMdCJPnlGuRiDPdlE8J6uP1v8xkBiVJv4v16lux-iwU9YPVRHarXfbOyeWaYvNnV1eglfkdqYrZBi0"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+<!-- Breadcrumb / Title -->
+<div class="mb-lg">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Payment Verification</h1>
+<p class="text-on-surface-variant text-body-md">Verify the manual bank transfer for Room 402B.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-start">
+<!-- Left Column: Bill Summary -->
+<div class="space-y-lg">
+<div class="bg-white rounded-xl border border-outline-variant p-lg shadow-soft">
+<div class="flex justify-between items-start mb-lg">
+<div>
+<span class="inline-block px-sm py-xs bg-primary-fixed text-on-primary-fixed text-label-sm font-label-sm rounded-lg mb-base">Room 402B</span>
+<h2 class="text-headline-md font-headline-md">Jonathan Harker</h2>
+</div>
+<div class="text-right">
+<p class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Due Date</p>
+<p class="font-bold">Oct 15, 2024</p>
+</div>
+</div>
+<div class="space-y-md border-t border-outline-variant pt-lg">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+<span class="text-body-md">Water Consumption</span>
+</div>
+<span class="font-medium">$24.50</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">bolt</span>
+<span class="text-body-md">Electricity Usage</span>
+</div>
+<span class="font-medium">$88.20</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">apartment</span>
+<span class="text-body-md">Base Maintenance Fee</span>
+</div>
+<span class="font-medium">$150.00</span>
+</div>
+</div>
+<div class="mt-xl pt-lg border-t-2 border-dashed border-outline-variant flex justify-between items-end">
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">TOTAL AMOUNT DUE</p>
+<p class="text-display-lg font-display-lg text-primary">$262.70</p>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center px-sm py-xs rounded-full bg-secondary-container/20 text-secondary text-label-sm font-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary mr-2"></span>
+                                Pending Approval
+                            </span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-md">
+<div class="flex flex-col sm:flex-row gap-md">
+<button class="flex-1 py-md px-lg bg-secondary-fixed text-on-secondary-fixed font-bold rounded-xl shadow-soft hover:shadow-hover transition-all flex items-center justify-center gap-sm" onclick="approvePayment()">
+<span class="material-symbols-outlined">check_circle</span>
+                            Approve Payment
+                        </button>
+<button class="flex-1 py-md px-lg bg-error-container text-on-error-container font-bold rounded-xl shadow-soft hover:shadow-hover transition-all flex items-center justify-center gap-sm" onclick="toggleRejectForm()">
+<span class="material-symbols-outlined">cancel</span>
+                            Reject Receipt
+                        </button>
+</div>
+<!-- Hidden Reject Form -->
+<div class="hidden animate-in slide-in-from-top-4 duration-300" id="rejectForm">
+<div class="bg-white rounded-xl border border-error p-lg shadow-soft">
+<label class="text-label-md font-label-md text-on-surface mb-sm block">Reason for Rejection</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-md text-body-md focus:border-primary transition-colors min-h-[100px]" id="rejectReason" placeholder="e.g., Image is blurry, incorrect amount, or wrong account..."></textarea>
+<div class="mt-md flex justify-end gap-md">
+<button class="text-on-surface-variant font-medium px-md py-sm hover:text-primary transition-colors" onclick="toggleRejectForm()">Cancel</button>
+<button class="bg-error text-on-error px-lg py-sm rounded-lg font-bold shadow-soft hover:opacity-90 transition-opacity" onclick="confirmReject()">Confirm Rejection</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Payment Slip Image -->
+<div class="sticky top-28">
+<div class="bg-white rounded-xl border border-outline-variant p-md shadow-soft relative overflow-hidden group">
+<div class="absolute top-md left-md z-10 flex gap-sm">
+<button class="bg-white/80 backdrop-blur-md p-sm rounded-full text-on-surface shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button class="bg-white/80 backdrop-blur-md p-sm rounded-full text-on-surface shadow-sm hover:bg-white transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+<div class="rounded-lg border border-outline-variant overflow-hidden bg-surface-container-lowest min-h-[600px] flex items-center justify-center relative cursor-zoom-in">
+<img class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105" data-alt="A professional, clean digital photograph of a bank transfer receipt (slip). The receipt is neatly placed on a minimalist white surface. It features clear typography for the amount $262.70, a transaction date, and a confirmation QR code. The lighting is bright and even, reinforcing a secure and transparent financial vibe. Modern corporate aesthetic with soft shadows." id="slipImage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC30K2C5Boip3wz_MK-GJs6fxYEs3wou0Ep-QT6lzclQ5KBWwkk7hKULkHIEtDeHoLvpdPICpoZZSkcCbZ9OlGFn4xlCwNTR8fiS2qD7i4Dsu7IekRWHN8S4pnCvVey2tQ195LNI1hS-5CPqwaOsKz99csJK6cqQKl413WZN7MTtwgKWmLrLnw7m4z9yqOsqg2gMqvuWCwFTXf0aBRtEpB2tJmxIUHKhqRbkOZEEMSokUzzX1r2GUoqs5T09yYqgBzrYZQ5x1vPEL0"/>
+</div>
+<div class="mt-md flex items-center justify-between text-on-surface-variant text-label-sm font-label-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Uploaded via Mobile App • 2 hours ago</span>
+</div>
+<span>REF: BK-99201-XT</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low border-t border-outline-variant w-full mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-lg px-margin-desktop max-w-max-width mx-auto gap-md">
+<div class="text-label-md font-label-md font-bold text-on-surface">Smart Bill</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">© 2024 Smart Bill. Minimalist Property Management.</p>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<script>
+        function toggleRejectForm() {
+            const form = document.getElementById('rejectForm');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                document.getElementById('rejectReason').focus();
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+
+        function approvePayment() {
+            const btn = event.currentTarget;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Processing...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                alert('Payment for Room 402B has been successfully approved.');
+                window.location.reload();
+            }, 1200);
+        }
+
+        function confirmReject() {
+            const reason = document.getElementById('rejectReason').value;
+            if (!reason.trim()) {
+                alert('Please provide a reason for rejection.');
+                return;
+            }
+            
+            const btn = event.currentTarget;
+            btn.innerHTML = 'Rejecting...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert('Payment rejected. Tenant will be notified with the reason: ' + reason);
+                window.location.reload();
+            }, 1200);
+        }
+
+        // Simple zoom effect for the slip
+        const slipImg = document.getElementById('slipImage');
+        slipImg.addEventListener('click', () => {
+            slipImg.classList.toggle('scale-150');
+        });
+    </script>
+</body></html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meter Entry &amp; Scan - Smart Bill</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Shared Component Logic & Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f9f9ff",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "xl": "40px",
+                    "max-width": "1280px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .meter-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation Bar (Shared Component) -->
+<header class="bg-surface border-b border-outline-variant fixed top-0 left-0 right-0 z-50">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="text-headline-md font-headline-md font-extrabold text-primary">Smart Bill</div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Overview</a>
+<a class="text-primary border-b-2 border-primary font-bold pb-1 text-label-md font-label-md" href="#">Rooms</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Meters</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors text-label-md font-label-md" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">dark_mode</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a property manager in a well-lit office, featuring soft natural lighting and a minimalist corporate aesthetic. The manager looks approachable and trustworthy, wearing a light-colored shirt against a blurred, modern architectural background that echoes the clean lines of the Smart Bill application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACRBQcUMAeDPOSE1hmRyRSFeDKzh9lQlbFYzJFCkjCWFnOSRSnwmUr9XjvxFbFgqTkDladJ42oas4ulqS54GImFzaNbaOnNYP75yceNat8un3NRiNUl6E3g1L4rHLpVd-9ZFRZc3MeXyyG4wxNzdTlL04zUhHLVuZ8ionjiJPCdKIXneYlqXlWPYx6Dq7xHp1-PrNY1hDUFu3lGq7HwLGvE48ExYdWw_2KLbuJ4uPswDDXFs386eZLzvn0ka6iJ6io41qoRbqmq5Y"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-margin-mobile md:px-margin-desktop max-w-max-width mx-auto">
+<!-- Selection Bar -->
+<section class="flex flex-col md:flex-row gap-md items-center mb-xl p-md bg-surface-container-lowest border border-outline-variant rounded-xl">
+<div class="flex-1 w-full md:w-auto">
+<label class="font-label-md text-label-md text-on-surface-variant block mb-1">Target Property / Room</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+<option>Room 402 - Building A (Mr. Tanawat)</option>
+<option>Room 403 - Building A (Ms. Jirapan)</option>
+<option>Room 501 - Building B (Vacant)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="w-full md:w-48">
+<label class="font-label-md text-label-md text-on-surface-variant block mb-1">Billing Period</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border border-outline-variant rounded-lg px-md py-sm font-body-md text-body-md focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none">
+<option>October 2024</option>
+<option>September 2024</option>
+<option>August 2024</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">calendar_month</span>
+</div>
+</div>
+</section>
+<!-- Meter Inputs Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-lg mb-xl">
+<!-- Water Meter (Left) -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-weight="fill">water_drop</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Water Meter</h2>
+</div>
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">photo_camera</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-primary">Upload Photo</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-lowest rounded-lg border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Previous Read</span>
+<div class="font-headline-md text-headline-md text-on-surface-variant">1,248.50</div>
+</div>
+<div class="p-md bg-surface-container-lowest rounded-lg border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Unit Price</span>
+<div class="font-headline-md text-headline-md text-on-surface-variant">฿18.00</div>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">Current Reading (m³)</label>
+<input class="w-full bg-white border border-outline-variant rounded-xl px-lg py-xl text-[48px] font-bold text-primary focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-center placeholder:text-surface-variant" placeholder="0000.00" type="number"/>
+</div>
+<div class="flex justify-between items-center pt-md border-t border-outline-variant">
+<span class="font-body-md text-body-md text-on-surface-variant">Consumption: <span class="font-bold">0.00 m³</span></span>
+<span class="font-headline-md text-headline-md text-primary">฿ 0.00</span>
+</div>
+</div>
+<!-- Electricity Meter (Right) -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-lg flex flex-col gap-lg">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary-container" data-weight="fill">bolt</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Electric Meter</h2>
+</div>
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container-lowest border border-outline-variant rounded-lg hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-tertiary-container">photo_camera</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-tertiary-container">Scan Meter</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-lowest rounded-lg border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Previous Read</span>
+<div class="font-headline-md text-headline-md text-on-surface-variant">8,452.00</div>
+</div>
+<div class="p-md bg-surface-container-lowest rounded-lg border border-outline-variant">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Unit Price</span>
+<div class="font-headline-md text-headline-md text-on-surface-variant">฿8.50</div>
+</div>
+</div>
+<div>
+<label class="font-label-md text-label-md text-on-surface-variant block mb-2">Current Reading (kWh)</label>
+<input class="w-full bg-white border border-outline-variant rounded-xl px-lg py-xl text-[48px] font-bold text-tertiary focus:border-tertiary focus:ring-4 focus:ring-tertiary/10 transition-all text-center placeholder:text-surface-variant" placeholder="0000.00" type="number"/>
+</div>
+<div class="flex justify-between items-center pt-md border-t border-outline-variant">
+<span class="font-body-md text-body-md text-on-surface-variant">Consumption: <span class="font-bold">0.00 kWh</span></span>
+<span class="font-headline-md text-headline-md text-tertiary">฿ 0.00</span>
+</div>
+</div>
+</section>
+<!-- Bill Summary Card -->
+<section class="bg-white border border-outline-variant rounded-xl p-lg shadow-[0px_4px_12px_rgba(30,41,59,0.03)] mb-xl">
+<h3 class="font-headline-md text-headline-md mb-lg text-on-surface">Bill Summary</h3>
+<div class="space-y-md">
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Base Rent (Monthly)</span>
+<span class="font-medium text-on-surface">฿ 8,500.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Internet (Fixed)</span>
+<span class="font-medium text-on-surface">฿ 650.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Water (Calculated)</span>
+<span class="font-medium text-on-surface">฿ 0.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Electric (Calculated)</span>
+<span class="font-medium text-on-surface">฿ 0.00</span>
+</div>
+<div class="pt-lg mt-md border-t-2 border-primary/10 flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">Grand Total</span>
+<span class="text-[32px] leading-tight font-extrabold text-primary">฿ 9,150.00</span>
+</div>
+</div>
+</section>
+<!-- Footer Actions -->
+<div class="flex justify-end items-center gap-md">
+<button class="px-xl py-md rounded-lg font-label-md text-label-md text-error hover:bg-error-container/20 transition-colors">
+                Cancel
+            </button>
+<button class="px-xl py-md bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary-container shadow-lg shadow-primary/20 active:opacity-80 transition-all">
+                บันทึกบิล
+            </button>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-low border-t border-outline-variant py-lg">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-margin-desktop max-w-max-width mx-auto gap-md">
+<div class="text-label-md font-label-md font-bold text-on-surface">Smart Bill</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant text-center md:text-left">© 2024 Smart Bill. Minimalist Property Management.</div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant hover:text-primary text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:text-primary text-label-sm font-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary text-label-sm font-label-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and calculation logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const waterInput = document.querySelector('input[placeholder="0000.00"]');
+            const electricInput = document.querySelectorAll('input[placeholder="0000.00"]')[1];
+            
+            // Simple visual feedback for inputs
+            [waterInput, electricInput].forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value;
+                    if(val > 0) {
+                        e.target.classList.add('border-primary');
+                    } else {
+                        e.target.classList.remove('border-primary');
+                    }
+                });
+            });
+
+            // Camera button hover effect placeholder for real scanner integration
+            document.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('mousedown', () => {
+                    btn.classList.add('scale-95');
+                });
+                btn.addEventListener('mouseup', () => {
+                    btn.classList.remove('scale-95');
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.classList.remove('scale-95');
+                });
+            });
+        });
+    </script>
+</body></html>

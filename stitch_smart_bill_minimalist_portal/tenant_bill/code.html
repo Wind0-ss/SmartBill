@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html lang="th"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Bill - Tenant View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Sarabun:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727785",
+                    "secondary-container": "#6cf8bb",
+                    "inverse-primary": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#002113",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "surface-container-high": "#dee8ff",
+                    "on-secondary-container": "#00714d",
+                    "on-surface-variant": "#424754",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#c2c6d6",
+                    "surface-tint": "#005ac2",
+                    "surface-dim": "#cfdaf2",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-primary-fixed": "#001a42",
+                    "surface-variant": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f0f3ff",
+                    "surface-bright": "#f9f9ff",
+                    "surface": "#f9f9ff",
+                    "primary": "#0058be",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-tertiary-container": "#fffbff",
+                    "background": "#f9f9ff",
+                    "on-surface": "#111c2d",
+                    "tertiary-container": "#b75b00",
+                    "surface-container-highest": "#d8e3fb",
+                    "on-primary-container": "#fefcff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#4edea3",
+                    "primary-container": "#2170e4",
+                    "primary-fixed": "#d8e2ff",
+                    "on-background": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#924700",
+                    "on-tertiary-fixed": "#311300",
+                    "tertiary-fixed": "#ffdcc6",
+                    "secondary": "#006c49",
+                    "surface-container": "#e7eeff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb786"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "xs": "4px",
+                    "margin-desktop": "48px",
+                    "lg": "24px",
+                    "xl": "40px",
+                    "max-width": "1280px"
+            },
+            "fontFamily": {
+                    "sans": ["Inter", "Sarabun", "sans-serif"],
+                    "label-sm": ["Inter", "Sarabun"],
+                    "headline-lg": ["Inter", "Sarabun"],
+                    "headline-md": ["Inter", "Sarabun"],
+                    "body-md": ["Inter", "Sarabun"],
+                    "body-sm": ["Inter", "Sarabun"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #f9f9ff; font-family: 'Inter', 'Sarabun', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; }
+        .qr-gradient { background: linear-gradient(135deg, #0058be 0%, #2170e4 100%); }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Top Navigation (Restricted/Public View - Simplified) -->
+<header class="bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-outline sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg md:px-margin-desktop max-w-max-width mx-auto h-16">
+<div class="text-headline-md font-headline-md font-extrabold text-primary dark:text-inverse-primary">
+                Smart Bill
+            </div>
+<div class="flex items-center gap-md">
+<span class="text-label-md font-label-md text-on-surface-variant">Tenant Portal</span>
+<span class="material-symbols-outlined text-primary cursor-pointer">help_outline</span>
+</div>
+</div>
+</header>
+<main class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+<!-- Header & Status -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-xl">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface mb-xs">บิลค่าเช่าและค่าน้ำค่าไฟประจำเดือน</h1>
+<div class="flex items-center gap-sm">
+<span class="text-headline-md font-headline-md text-primary">Room 402</span>
+<span class="text-body-md font-body-md text-on-surface-variant">| ประจำรอบเดือน ตุลาคม 2566</span>
+</div>
+</div>
+<div class="inline-flex items-center gap-sm px-lg py-sm rounded-full bg-orange-50 text-orange-700 border border-orange-200">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+<span class="text-label-md font-label-md">ยังไม่ชำระ</span>
+</div>
+</div>
+<!-- Main Content Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Left Column: Summary & Evidence -->
+<div class="lg:col-span-8 space-y-lg">
+<!-- Bill Table Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+<h3 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-lg">รายการค้างชำระ</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="border-b border-outline-variant">
+<tr>
+<th class="py-md text-label-md font-label-md text-on-surface-variant">รายการ</th>
+<th class="py-md text-label-md font-label-md text-on-surface-variant text-right">รายละเอียด</th>
+<th class="py-md text-label-md font-label-md text-on-surface-variant text-right">จำนวนเงิน</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr>
+<td class="py-lg text-body-md font-body-md">ค่าเช่าห้องพัก</td>
+<td class="py-lg text-body-md font-body-md text-right text-on-surface-variant">รายเดือนตุลาคม</td>
+<td class="py-lg text-body-md font-body-md text-right">4,500.00</td>
+</tr>
+<tr>
+<td class="py-lg text-body-md font-body-md">ค่าน้ำประปา</td>
+<td class="py-lg text-body-md font-body-md text-right text-on-surface-variant">12 หน่วย (18.00/หน่วย)</td>
+<td class="py-lg text-body-md font-body-md text-right">216.00</td>
+</tr>
+<tr>
+<td class="py-lg text-body-md font-body-md">ค่าไฟฟ้า</td>
+<td class="py-lg text-body-md font-body-md text-right text-on-surface-variant">154 หน่วย (7.00/หน่วย)</td>
+<td class="py-lg text-body-md font-body-md text-right">1,078.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-surface-container-low">
+<td class="py-lg px-md text-headline-md font-headline-md text-primary text-right" colspan="2">ยอดชำระสุทธิ</td>
+<td class="py-lg px-md text-headline-md font-headline-md text-primary text-right">฿ 5,794.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+<!-- Usage Comparison Chart -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg shadow-sm">
+<h3 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mb-lg">สถิติการใช้งานย้อนหลัง</h3>
+<div class="h-64 w-full">
+<canvas id="usageChart"></canvas>
+</div>
+</div>
+<!-- Meter Evidence -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Electric Meter -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<span class="text-label-md font-label-md font-bold">มิเตอร์ไฟ (154 หน่วย)</span>
+<button class="text-primary text-label-sm font-label-sm hover:underline flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">zoom_in</span> Zoom
+                            </button>
+</div>
+<div class="relative rounded-lg overflow-hidden h-40 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A high-quality close-up photograph of a modern digital electric meter showing the current usage reading. The image is crisp, with professional neutral lighting and a clean, minimalist background typical of a modern utility installation. Soft shadows and a sharp focus on the digital display emphasize transparency and accuracy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4g2I002TsqABN-VEemlbMEVBxsYUzd0nCyOn0BW4lcgrljBRFGmmuGFtHvhHZN4yXThjfMduf3yBGVWWmuAIewx_Dg1vXGxDKEmK5cQf7ERQTWTgnyh_kGRZltXfdk8Nx92OTUqMu47yt03DT51MMWbZ4wUADpG5EMmPiXK8BVUHfQvEi1q7X-2qfn4UkgAe4jVa-WzVVS_j_RXskathQRmqat2uVSQQ8RgOT8rXjuPSSc1h5oImTqdG6sRFMhQ7d2wGvwGSd-LY"/>
+</div>
+</div>
+<!-- Water Meter -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-md flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<span class="text-label-md font-label-md font-bold">มิเตอร์น้ำ (12 หน่วย)</span>
+<button class="text-primary text-label-sm font-label-sm hover:underline flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">zoom_in</span> Zoom
+                            </button>
+</div>
+<div class="relative rounded-lg overflow-hidden h-40 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A detailed macro shot of a residential water meter, with clear visible numbers and a small rotating gear. The lighting is soft and bright, highlighting the clean industrial design of the meter. The aesthetic is professional and informative, set against a subtle, light-colored concrete background to evoke a sense of property management maintenance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2NtZLsJON6XocfL2ic4bn41kHmIBIWs-FlGqz-aeioKurIiLyUK1jTxfBKRrER0yTTpdDwun-6igfF5cfEBhwg4A-q5F_88bJ9hfzKPB9Is_DKKZRUv74fvsz-MFWRz4DFqUbgn1G70ASkjyi0JO39Wh0zihcp-1rgGOpy5R9OGdqLEfRyNxCkvwTUP0_06EHTIlEOWOcGgR1JwhwFnU4a-8hc_qBoN02iKM9DJD1WKm1vPGdNhzxuXZFpINwRARu4QQ1NzlVmqs"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Payment Actions -->
+<div class="lg:col-span-4 space-y-lg">
+<!-- Payment QR Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-lg overflow-hidden">
+<div class="qr-gradient p-lg text-white text-center">
+<div class="flex justify-center mb-md">
+<img alt="PromptPay" class="h-8 brightness-0 invert" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwRXtE69JQvb8UAdirc1mhLXXG3mLvEisSzIHWw0r5Urw4K1cMTZ2_qr-h-QJJNtMj2JXVrGcjBIAziSRyClGOwVuYxC3wgwkbSXl1VX4M4PDNjIzmtAyxzXH6SjrX12MuAqQC3vx_Di9CPi9LPPBaJ8aNlkHNGOYcDI7c8PnDvlQYYeff0DtEuPWfmouj5adiM62IxJt-DPjobYKh5sw2kfUY_v1zdEL_q8ubOTkuoNhE6HbnTTGs_yUirm81ExImnmDTrJ7rDZw"/>
+</div>
+<p class="text-label-sm font-label-sm opacity-90">Scan to pay via any Banking App</p>
+</div>
+<div class="p-xl flex flex-col items-center">
+<div class="w-48 h-48 bg-white border-2 border-surface-container rounded-xl p-md mb-md">
+<!-- Simulated QR code via SVG-like pattern for performance -->
+<div class="w-full h-full bg-on-surface opacity-10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[64px]">qr_code_2</span>
+</div>
+</div>
+<p class="text-headline-md font-headline-md font-bold text-on-surface">฿ 5,794.00</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-xs">Ref: Room 402 - OCT23</p>
+</div>
+</div>
+<!-- Upload Slip Box -->
+<div class="bg-surface-container-low rounded-xl border-2 border-dashed border-outline-variant p-lg text-center">
+<span class="material-symbols-outlined text-[48px] text-outline mb-md">cloud_upload</span>
+<h4 class="text-label-md font-label-md text-on-surface mb-xs">แจ้งชำระเงิน</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-lg">อัปโหลดภาพสลิปเพื่อยืนยันการโอน</p>
+<label class="block">
+<span class="sr-only">Choose slip</span>
+<input class="block w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:bg-primary-container cursor-pointer" type="file"/>
+</label>
+<button class="mt-lg w-full bg-primary text-on-primary py-md px-lg rounded-lg font-bold hover:bg-primary-container transition-colors">
+                        ส่งสลิปแจ้งโอน
+                    </button>
+</div>
+<!-- Notice / Support -->
+<div class="p-lg bg-surface border border-outline-variant rounded-xl">
+<h5 class="text-label-md font-label-md font-bold text-on-surface flex items-center gap-xs mb-sm">
+<span class="material-symbols-outlined text-[18px]">info</span> ข้อควรทราบ
+                    </h5>
+<ul class="text-body-sm font-body-sm text-on-surface-variant space-y-xs list-disc list-inside">
+<li>กรุณาชำระเงินภายในวันที่ 5 ของเดือน</li>
+<li>หลังโอนเงิน ระบบจะอัปเดตสถานะภายใน 24 ชม.</li>
+<li>ติดต่อผู้ดูแล: 02-xxx-xxxx</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-inverse-surface border-t border-outline-variant dark:border-outline mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-lg px-margin-desktop max-w-max-width mx-auto gap-md">
+<div class="text-label-md font-label-md font-bold text-on-surface dark:text-inverse-on-surface">
+                Smart Bill
+            </div>
+<div class="text-body-sm font-body-sm text-on-surface-variant dark:text-surface-variant text-center">
+                © 2024 Smart Bill. Minimalist Property Management.
+            </div>
+<div class="flex gap-lg">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'ค่าไฟฟ้า (หน่วย)',
+                        data: [140, 165, 130, 145, 154],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'ค่าน้ำ (หน่วย)',
+                        data: [10, 15, 12, 11, 12],
+                        borderColor: '#94a3b8',
+                        backgroundColor: 'rgba(148, 163, 184, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'Sarabun',
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                borderDash: [5, 5],
+                                color: '#e2e8f0'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Simple micro-interaction for the upload box
+        const uploadBox = document.querySelector('.border-dashed');
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('bg-surface-container-highest', 'border-primary');
+        });
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('bg-surface-container-highest', 'border-primary');
+        });
+    </script>
+</body></html>
