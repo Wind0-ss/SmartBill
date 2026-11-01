@@ -332,6 +332,42 @@ CREATE TABLE IF NOT EXISTS `building_meters` (
 ) ENGINE=InnoDB;
 
 -- ============================================================
+-- 19. EXPENSE_TYPES — ประเภทค่าใช้จ่ายเพิ่มเติม (ค่าขยะ, ค่าบำรุงมิเตอร์ ฯลฯ)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `expense_types` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(150) NOT NULL COMMENT 'ชื่อรายการ เช่น ค่าขยะ',
+  `icon` VARCHAR(50) DEFAULT 'receipt_long' COMMENT 'Material Symbols icon',
+  `default_amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT 'ยอดเริ่มต้นที่เติมให้อัตโนมัติ',
+  `bill_group` ENUM('rent','utility') NOT NULL DEFAULT 'rent' COMMENT 'ออกรวมกับบิลค่าเช่า หรือ บิลค่าน้ำ/ไฟ',
+  `is_active` TINYINT(1) DEFAULT 1,
+  `sort_order` INT DEFAULT 0,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY `uq_expense_type_name` (`name`)
+) ENGINE=InnoDB;
+
+-- ============================================================
+-- 20. ADDITIONAL_CHARGES — ค่าใช้จ่ายเพิ่มเติมที่บันทึกต่อห้อง/รอบเดือน
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `additional_charges` (
+  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `room_id` INT UNSIGNED NOT NULL,
+  `expense_type_id` INT UNSIGNED NULL COMMENT 'NULL = รายการเฉพาะกิจที่พิมพ์เอง',
+  `billing_month` DATE NOT NULL COMMENT 'YYYY-MM-01',
+  `description` VARCHAR(200) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `bill_group` ENUM('rent','utility') NOT NULL DEFAULT 'rent',
+  `notes` VARCHAR(300),
+  `recorded_by` INT UNSIGNED,
+  `recorded_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`expense_type_id`) REFERENCES `expense_types`(`id`) ON DELETE SET NULL,
+  FOREIGN KEY (`recorded_by`) REFERENCES `users`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ============================================================
 -- INDEXES
 -- ============================================================
 CREATE INDEX `idx_rooms_status` ON `rooms`(`status`);
@@ -346,6 +382,8 @@ CREATE INDEX `idx_meter_readings_month` ON `meter_readings`(`billing_month`);
 CREATE INDEX `idx_notifications_tenant` ON `notifications`(`tenant_id`);
 CREATE INDEX `idx_activity_logs_user` ON `activity_logs`(`user_id`);
 CREATE INDEX `idx_activity_logs_entity` ON `activity_logs`(`entity_type`, `entity_id`);
+CREATE INDEX `idx_charges_room_month` ON `additional_charges`(`room_id`, `billing_month`);
+CREATE INDEX `idx_charges_month` ON `additional_charges`(`billing_month`);
 
 -- ============================================================
 -- SEED DATA
@@ -427,4 +465,12 @@ INSERT INTO `utility_rates` (`rate_type`, `building_id`, `rate_per_unit`, `effec
 ('water', NULL, 18.00, '2024-01-01'),
 ('electric', NULL, 7.50, '2024-01-01');
 
+
+-- Default expense types (ค่าใช้จ่ายเพิ่มเติม) — ยอดตั้งต้น 0 ให้ผู้ดูแลกำหนดเองที่หน้าตั้งค่า
+INSERT INTO `expense_types` (`name`, `icon`, `default_amount`, `bill_group`, `sort_order`) VALUES
+('ค่าขยะ', 'delete', 0.00, 'rent', 1),
+('ค่าบำรุงมิเตอร์', 'build', 0.00, 'utility', 2),
+('ค่าส่วนกลาง', 'apartment', 0.00, 'rent', 3),
+('ค่าอินเทอร์เน็ต', 'wifi', 0.00, 'rent', 4),
+('ค่าที่จอดรถ', 'local_parking', 0.00, 'rent', 5);
 SET FOREIGN_KEY_CHECKS = 1;

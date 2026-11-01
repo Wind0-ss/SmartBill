@@ -705,3 +705,11 @@ textarea.form-input {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
+/* ============================================================
+   Expense Cards — ค่าใช้จ่ายเพิ่มเติม (หน้าบันทึกมิเตอร์)
+   ============================================================ */
+.expense-card.is-selected {
+    border-color: var(--primary);
+    background-color: var(--primary-fixed);
+}

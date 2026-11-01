@@ -109,12 +109,27 @@ switch ($action) {
             
             $waterCost = $water['total_cost'] ?? 0;
             $electricCost = $electric['total_cost'] ?? 0;
-            
+
+            // ค่าใช้จ่ายเพิ่มเติมที่บันทึกไว้สำหรับห้อง/รอบเดือนนี้ (ค่าขยะ, ค่าบำรุงมิเตอร์ ฯลฯ)
+            $extraStmt = $db->prepare("
+                SELECT description, amount, bill_group
+                FROM additional_charges
+                WHERE room_id = ? AND billing_month = ?
+                ORDER BY id ASC
+            ");
+            $extraStmt->execute([$room['id'], $month]);
+            $extras = $extraStmt->fetchAll();
+
+            $rentExtras = array_values(array_filter($extras, function ($c) { return $c['bill_group'] === 'rent'; }));
+            $utilExtras = array_values(array_filter($extras, function ($c) { return $c['bill_group'] === 'utility'; }));
+            $rentExtrasTotal = array_sum(array_column($rentExtras, 'amount'));
+            $utilExtrasTotal = array_sum(array_column($utilExtras, 'amount'));
+
             $dueDay = getSetting('bill_due_day', 5);
             $dueDate = date('Y-m-' . str_pad($dueDay, 2, '0', STR_PAD_LEFT), strtotime($month . ' +1 month'));
-            
+
             // 1. Rent Invoice
-            $rentAmount = $room['base_rent'] + $room['other_fees'];
+            $rentAmount = $room['base_rent'] + $room['other_fees'] + $rentExtrasTotal;
             if ($rentAmount > 0 && !$hasRent) {
                 $invoiceNumber = generateInvoiceNumber($month, 'rent');
                 $db->prepare("
@@ -128,11 +143,15 @@ switch ($action) {
                 if ($room['other_fees'] > 0) {
                     $itemStmt->execute([$invId, 'other', 'ค่าบริการอื่นๆ', 1, $room['other_fees'], $room['other_fees'], 2]);
                 }
+                $sort = 10;
+                foreach ($rentExtras as $c) {
+                    $itemStmt->execute([$invId, 'other', $c['description'], 1, $c['amount'], $c['amount'], $sort++]);
+                }
                 $created++;
             }
-            
+
             // 2. Utility Invoice
-            $utilityAmount = $waterCost + $electricCost;
+            $utilityAmount = $waterCost + $electricCost + $utilExtrasTotal;
             if ($utilityAmount > 0 && !$hasUtil) {
                 $invoiceNumber = generateInvoiceNumber($month, 'utility');
                 $db->prepare("
@@ -147,6 +166,10 @@ switch ($action) {
                 }
                 if ($electricCost > 0) {
                     $itemStmt->execute([$invId, 'electric', 'ค่าไฟฟ้า (' . number_format($electric['consumption'] ?? 0, 2) . ' หน่วย)', $electric['consumption'] ?? 0, getSetting('electric_rate', 7.5), $electricCost, 2]);
+                }
+                $sort = 10;
+                foreach ($utilExtras as $c) {
+                    $itemStmt->execute([$invId, 'other', $c['description'], 1, $c['amount'], $c['amount'], $sort++]);
                 }
                 $created++;
             }
