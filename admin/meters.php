@@ -101,6 +101,9 @@ include dirname(__DIR__) . '/components/navbar.php';
                     <div class="flex-1 p-3 bg-gray-50 rounded-lg text-center">
                         <p class="text-xs text-gray-500 mb-1">ค่าเดือนก่อน</p>
                         <p class="text-lg font-bold text-gray-700" id="waterPrev">0.00</p>
+                        <input type="number" id="waterPrevInput" step="0.01" min="0" placeholder="กรอกเลขตั้งต้น" oninput="setManualPrev('water')"
+                               class="hidden w-full border border-dashed border-gray-300 rounded-lg px-2 py-1 text-lg font-bold text-gray-700 text-center bg-white outline-none focus:border-blue-400">
+                        <p class="text-[10px] text-gray-400" id="waterPrevMonth">&nbsp;</p>
                     </div>
                     <div class="flex-1 p-3 bg-blue-50 rounded-lg text-center">
                         <p class="text-xs text-blue-500 mb-1">ใช้ไป</p>
@@ -141,6 +144,9 @@ include dirname(__DIR__) . '/components/navbar.php';
                     <div class="flex-1 p-3 bg-gray-50 rounded-lg text-center">
                         <p class="text-xs text-gray-500 mb-1">ค่าเดือนก่อน</p>
                         <p class="text-lg font-bold text-gray-700" id="electricPrev">0.00</p>
+                        <input type="number" id="electricPrevInput" step="0.01" min="0" placeholder="กรอกเลขตั้งต้น" oninput="setManualPrev('electric')"
+                               class="hidden w-full border border-dashed border-gray-300 rounded-lg px-2 py-1 text-lg font-bold text-gray-700 text-center bg-white outline-none focus:border-orange-400">
+                        <p class="text-[10px] text-gray-400" id="electricPrevMonth">&nbsp;</p>
                     </div>
                     <div class="flex-1 p-3 bg-orange-50 rounded-lg text-center">
                         <p class="text-xs text-orange-500 mb-1">ใช้ไป</p>
@@ -315,6 +321,10 @@ function onRoomSelected() {
                 meterData.electricPrev = data.electric_previous || 0;
                 document.getElementById('waterPrev').textContent = meterData.waterPrev.toFixed(2);
                 document.getElementById('electricPrev').textContent = meterData.electricPrev.toFixed(2);
+                document.getElementById('waterPrevMonth').textContent = prevMonthLabel(data.water_previous_month);
+                document.getElementById('electricPrevMonth').textContent = prevMonthLabel(data.electric_previous_month);
+                togglePrevInput('water', !data.water_previous_month, data.existing);
+                togglePrevInput('electric', !data.electric_previous_month, data.existing);
 
                 // เติมค่าที่เคยบันทึกไว้ของเดือนนี้กลับเข้าฟอร์ม
                 document.getElementById('waterCurrent').value = data.water_current > 0 ? data.water_current : '';
@@ -330,6 +340,32 @@ function onRoomSelected() {
             meterData.waterPrev = 0;
             meterData.electricPrev = 0;
         });
+}
+
+// ไม่มีประวัติเดือนก่อนในระบบ → เปิดช่องให้กรอกเลขตั้งต้นเอง (เดือนแรกที่เริ่มใช้ระบบ)
+function togglePrevInput(type, showInput, existing) {
+    const label = document.getElementById(type + 'Prev');
+    const input = document.getElementById(type + 'PrevInput');
+    // ถ้าเดือนนี้เคยบันทึกไว้แล้ว ใช้ previous_reading ที่เก็บไว้เป็นค่าตั้งต้นของช่อง
+    const saved = (existing || []).find(r => r.meter_type === type);
+    input.value = (showInput && saved && parseFloat(saved.previous_reading) > 0) ? parseFloat(saved.previous_reading) : '';
+    label.classList.toggle('hidden', showInput);
+    input.classList.toggle('hidden', !showInput);
+    if (showInput) setManualPrev(type);
+}
+
+function setManualPrev(type) {
+    const v = parseFloat(document.getElementById(type + 'PrevInput').value) || 0;
+    meterData[type + 'Prev'] = v;
+    calcMeter(type);
+}
+
+// ป้ายบอกว่าค่าเดือนก่อนมาจากรอบเดือนไหน
+function prevMonthLabel(ym) {
+    if (!ym) return 'ยังไม่มีประวัติ — กรอกเลขมิเตอร์เดือนก่อนได้เอง';
+    const th = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+    const [y, m] = ym.split('-');
+    return 'จากรอบ ' + th[parseInt(m, 10) - 1] + ' ' + (parseInt(y, 10) + 543);
 }
 
 function calcMeter(type) {
@@ -537,6 +573,9 @@ async function saveAll() {
     formData.append('billing_month', month);
     formData.append('water_reading', waterVal);
     formData.append('electric_reading', electricVal);
+    // เลขตั้งต้นที่กรอกเอง (API จะใช้เฉพาะตอนไม่มีประวัติเดือนก่อน)
+    formData.append('water_previous', parseFloat(document.getElementById('waterPrevInput').value) || 0);
+    formData.append('electric_previous', parseFloat(document.getElementById('electricPrevInput').value) || 0);
     formData.append('charges', JSON.stringify(charges));
 
     try {

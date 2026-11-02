@@ -18,6 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     setSetting('water_rate', $_POST['water_rate'], 'number', $userId);
     setSetting('electric_rate', $_POST['electric_rate'], 'number', $userId);
     setSetting('promptpay_number', $_POST['promptpay_number'], 'string', $userId);
+    setSetting('promptpay_name', $_POST['promptpay_name'] ?? '', 'string', $userId);
+    setSetting('bank_name', $_POST['bank_name'] ?? '', 'string', $userId);
+    setSetting('bank_account_name', $_POST['bank_account_name'] ?? '', 'string', $userId);
+    setSetting('bank_account_number', $_POST['bank_account_number'] ?? '', 'string', $userId);
     setSetting('line_channel_token', $_POST['line_channel_token'], 'string', $userId);
     setSetting('line_login_channel_id', $_POST['line_login_channel_id'], 'string', $userId);
     setSetting('line_login_channel_secret', $_POST['line_login_channel_secret'], 'string', $userId);
@@ -34,6 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
 $waterRate = getSetting('water_rate', 18.00);
 $electricRate = getSetting('electric_rate', 7.50);
 $promptpay = getSetting('promptpay_number', '');
+$promptpayName = getSetting('promptpay_name', '');
+$bankName = getSetting('bank_name', '');
+$bankAccountName = getSetting('bank_account_name', '');
+$bankAccountNumber = getSetting('bank_account_number', '');
 $lineToken = getSetting('line_channel_token', '');
 $lineLoginChannelId = getSetting('line_login_channel_id', '');
 $lineLoginChannelSecret = getSetting('line_login_channel_secret', '');
@@ -98,11 +106,40 @@ include dirname(__DIR__) . '/components/navbar.php';
                     </div>
                 </div>
 
-                <div>
-                    <label class="form-label">หมายเลข PromptPay</label>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">payments</span>
-                        <input type="text" name="promptpay_number" value="<?= sanitize($promptpay) ?>" placeholder="เบอร์โทร หรือ เลขบัตรประชาชน" class="form-input pl-12">
+                <div class="pt-2">
+                    <p class="text-sm font-semibold text-on-surface mb-1">ช่องทางการชำระเงิน</p>
+                    <p class="text-xs text-outline mb-3">แสดงในข้อความแจ้งค่าใช้จ่ายที่ส่งให้ผู้เช่าทาง LINE</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label">หมายเลข PromptPay</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">payments</span>
+                            <input type="text" name="promptpay_number" value="<?= sanitize($promptpay) ?>" placeholder="เบอร์โทร หรือ เลขบัตรประชาชน" class="form-input pl-12">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">ชื่อบัญชี PromptPay</label>
+                        <input type="text" name="promptpay_name" value="<?= sanitize($promptpayName) ?>" placeholder="ชื่อ-นามสกุล เจ้าของบัญชี" class="form-input">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="form-label">ธนาคาร</label>
+                        <input type="text" name="bank_name" value="<?= sanitize($bankName) ?>" placeholder="เช่น ธ.ออมสิน" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">ชื่อบัญชี</label>
+                        <input type="text" name="bank_account_name" value="<?= sanitize($bankAccountName) ?>" placeholder="ชื่อ-นามสกุล" class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">เลขที่บัญชี</label>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">account_balance</span>
+                            <input type="text" name="bank_account_number" value="<?= sanitize($bankAccountNumber) ?>" placeholder="0204445259xx" class="form-input pl-12">
+                        </div>
                     </div>
                 </div>
 

@@ -140,6 +140,23 @@ switch ($action) {
         }
         break;
 
+    // ---- UNLINK LINE ----
+    // ปลดการผูกบัญชี LINE ของผู้เช่าในห้อง เพื่อให้ลงทะเบียนใหม่ได้ (เช่น เปลี่ยนเครื่อง/เปลี่ยนบัญชี)
+    case 'unlink_line':
+        $input = getInput();
+        $id = (int)($input['id'] ?? 0);
+        if ($id <= 0) jsonResponse(['success' => false, 'message' => 'Invalid room ID'], 400);
+
+        $stmt = $db->prepare("UPDATE tenants SET line_user_id = NULL WHERE room_id = ? AND is_active = 1");
+        $stmt->execute([$id]);
+        if ($stmt->rowCount() === 0) {
+            jsonResponse(['success' => false, 'message' => 'ห้องนี้ยังไม่มีผู้เช่าที่ผูก LINE ไว้'], 400);
+        }
+
+        logActivity($_SESSION['user_id'], 'ปลดการผูก LINE ของผู้เช่า', 'room', $id);
+        jsonResponse(['success' => true, 'message' => 'ปลดการผูก LINE แล้ว ผู้เช่าสามารถลงทะเบียนใหม่ได้']);
+        break;
+
     // ---- LIST ----
     case 'list':
         $buildingId = (int)($_GET['building_id'] ?? 0);

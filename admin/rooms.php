@@ -167,7 +167,12 @@ include dirname(__DIR__) . '/components/navbar.php';
                             <td class="px-6 py-4 text-sm font-medium"><?= formatCurrency($room['base_rent']) ?></td>
                             <td class="px-6 py-4 text-center">
                                 <?php if ($room['line_user_id']): ?>
-                                <span class="material-symbols-outlined text-[#06C755]" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+                                <button type="button" id="line-badge-<?= $room['id'] ?>" title="ผูก LINE แล้ว — คลิกเพื่อปลดการผูก"
+                                        class="group inline-flex items-center gap-1 rounded-full px-2 py-1 hover:bg-error/10 transition-colors"
+                                        onclick="unlinkLine(<?= $room['id'] ?>, '<?= sanitize($room['room_number']) ?>')">
+                                    <span class="material-symbols-outlined text-[#06C755] group-hover:hidden" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+                                    <span class="material-symbols-outlined text-error hidden group-hover:inline">link_off</span>
+                                </button>
                                 <?php else: ?>
                                 <span class="material-symbols-outlined text-outline-variant">chat_bubble</span>
                                 <?php endif; ?>
@@ -289,6 +294,20 @@ async function updateRoom() {
             setTimeout(() => location.reload(), 800);
         }
     } catch (err) {}
+}
+
+// Unlink tenant's LINE account so they can register again
+function unlinkLine(id, number) {
+    confirmAction('ปลดการผูก LINE ของห้อง ' + number + '?\nผู้เช่าจะไม่ได้รับบิลทาง LINE จนกว่าจะลงทะเบียนใหม่', async () => {
+        try {
+            const response = await API.post('/api/rooms.php?action=unlink_line', { id });
+            if (response.success) {
+                Toast.success(response.message);
+                const badge = document.getElementById('line-badge-' + id);
+                if (badge) badge.outerHTML = '<span class="material-symbols-outlined text-outline-variant">chat_bubble</span>';
+            }
+        } catch (err) {}
+    });
 }
 
 // Delete room

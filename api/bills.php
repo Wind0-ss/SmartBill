@@ -189,7 +189,7 @@ switch ($action) {
             jsonResponse(['success' => false, 'message' => 'ไม่ระบุ invoice_id'], 400);
         }
         
-        $result = sendFlexBillNotification($invoiceId);
+        $result = sendBillNotification($invoiceId);
         
         if ($result['success']) {
             logActivity($_SESSION['user_id'], 'ส่งแจ้งเตือนบิลผ่าน LINE', 'invoice', $invoiceId);
@@ -204,21 +204,21 @@ switch ($action) {
         $input = getInput();
         $month = $input['billing_month'] ?? date('Y-m-01');
         
+        // ส่งห้องละ 1 ข้อความ (รวมบิลค่าเช่า + ค่าน้ำ/ไฟ) จึงจัดกลุ่มตามห้อง
         $invoices = $db->prepare("
-            SELECT i.id, r.room_number, t.line_user_id
+            SELECT DISTINCT i.room_id
             FROM invoices i
-            JOIN rooms r ON i.room_id = r.id
             JOIN tenants t ON i.tenant_id = t.id
             WHERE i.billing_month = ? AND i.sent_via_line = 0 AND i.status != 'cancelled'
               AND t.line_user_id IS NOT NULL AND t.line_user_id != ''
         ");
         $invoices->execute([$month]);
-        $bills = $invoices->fetchAll();
-        
+        $roomIds = $invoices->fetchAll(PDO::FETCH_COLUMN);
+
         $sent = 0;
         $failed = 0;
-        foreach ($bills as $bill) {
-            $result = sendFlexBillNotification($bill['id']);
+        foreach ($roomIds as $roomId) {
+            $result = sendCombinedBillNotification((int)$roomId, $month);
             if ($result['success']) {
                 $sent++;
             } else {

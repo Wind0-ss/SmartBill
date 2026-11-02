@@ -11,33 +11,57 @@ requireLoginAPI();
 $action = $_GET['action'] ?? '';
 $db = getDB();
 
+/**
+ * ค่ามิเตอร์ล่าสุดก่อนรอบเดือนที่เลือก (ไม่จำกัดว่าต้องเป็นเดือนก่อนหน้าพอดี
+ * เผื่อกรณีเดือนไหนไม่ได้จด หรือเริ่มจดไม่ต่อเนื่อง)
+ * คืนค่า ['reading' => float, 'month' => 'YYYY-MM-01'|null]
+ */
+function getPreviousReading(PDO $db, int $roomId, string $type, string $billingMonth): array {
+    $stmt = $db->prepare("
+        SELECT mr.current_reading, mr.billing_month
+        FROM meter_readings mr
+        JOIN meters m ON mr.meter_id = m.id
+        WHERE mr.room_id = ? AND m.meter_type = ? AND mr.billing_month < ?
+        ORDER BY mr.billing_month DESC, mr.id DESC
+        LIMIT 1
+    ");
+    $stmt->execute([$roomId, $type, $billingMonth]);
+    $row = $stmt->fetch();
+    return [
+        'reading' => $row ? (float)$row['current_reading'] : 0.0,
+        'month'   => $row ? $row['billing_month'] : null,
+    ];
+}
+
+/**
+ * หา id มิเตอร์ของห้อง ถ้ายังไม่มีให้สร้างให้เลย
+ * (ห้องที่เพิ่มโดยยังไม่มีผู้เช่าจะไม่มีแถว meters ทำให้ก่อนหน้านี้บันทึกค่าไม่ลง)
+ */
+function getOrCreateMeterId(PDO $db, int $roomId, string $type): int {
+    $stmt = $db->prepare("SELECT id FROM meters WHERE room_id = ? AND meter_type = ? ORDER BY id ASC LIMIT 1");
+    $stmt->execute([$roomId, $type]);
+    $id = $stmt->fetchColumn();
+    if ($id) return (int)$id;
+
+    $rn = $db->prepare("SELECT room_number FROM rooms WHERE id = ?");
+    $rn->execute([$roomId]);
+    $roomNumber = $rn->fetchColumn() ?: $roomId;
+
+    $db->prepare("INSERT INTO meters (room_id, meter_type, meter_number) VALUES (?, ?, ?)")
+       ->execute([$roomId, $type, ($type === 'water' ? 'W-' : 'E-') . $roomNumber]);
+    return (int)$db->lastInsertId();
+}
+
 switch ($action) {
     case 'get_readings':
         $roomId = (int)($_GET['room_id'] ?? 0);
         $billingMonth = $_GET['billing_month'] ?? date('Y-m-01');
+        $billingMonth = date('Y-m-01', strtotime($billingMonth));
 
-        // Get previous month
-        $prevMonth = date('Y-m-01', strtotime($billingMonth . ' -1 month'));
-
-        // Water previous
-        $waterPrev = $db->prepare("
-            SELECT mr.current_reading
-            FROM meter_readings mr
-            JOIN meters m ON mr.meter_id = m.id
-            WHERE m.room_id = ? AND m.meter_type = 'water' AND mr.billing_month = ?
-        ");
-        $waterPrev->execute([$roomId, $prevMonth]);
-        $waterPrevReading = $waterPrev->fetchColumn() ?: 0;
-
-        // Electric previous
-        $electricPrev = $db->prepare("
-            SELECT mr.current_reading
-            FROM meter_readings mr
-            JOIN meters m ON mr.meter_id = m.id
-            WHERE m.room_id = ? AND m.meter_type = 'electric' AND mr.billing_month = ?
-        ");
-        $electricPrev->execute([$roomId, $prevMonth]);
-        $electricPrevReading = $electricPrev->fetchColumn() ?: 0;
+        $waterPrev    = getPreviousReading($db, $roomId, 'water', $billingMonth);
+        $electricPrev = getPreviousReading($db, $roomId, 'electric', $billingMonth);
+        $waterPrevReading    = $waterPrev['reading'];
+        $electricPrevReading = $electricPrev['reading'];
 
         // Check if current month already recorded
         $existing = $db->prepare("
@@ -70,6 +94,8 @@ switch ($action) {
             'success' => true,
             'water_previous' => (float)$waterPrevReading,
             'electric_previous' => (float)$electricPrevReading,
+            'water_previous_month' => $waterPrev['month'],
+            'electric_previous_month' => $electricPrev['month'],
             'water_current' => $waterCurrent,
             'electric_current' => $electricCurrent,
             'existing' => $existingReadings,
@@ -129,9 +155,9 @@ switch ($action) {
             jsonResponse(['success' => false, 'message' => 'กรุณากรอกค่ามิเตอร์ หรือค่าใช้จ่ายเพิ่มเติมอย่างน้อย 1 รายการ'], 400);
         }
 
+        $billingMonth = date('Y-m-01', strtotime($billingMonth));
         $waterRate = getSetting('water_rate', 18.00);
         $electricRate = getSetting('electric_rate', 7.50);
-        $prevMonth = date('Y-m-01', strtotime($billingMonth . ' -1 month'));
 
         $db->beginTransaction();
         try {
@@ -148,44 +174,33 @@ switch ($action) {
                 if ($upload['success']) $electricPhotoPath = 'uploads/meters/' . $upload['filename'];
             }
 
-            // Save water reading
+            // บันทึกค่ามิเตอร์ — previous_reading อัปเดตด้วยทุกครั้งที่บันทึกซ้ำ
+            // เพื่อให้แถวเก่าที่เคยถูกบันทึกเป็น 0 ถูกแก้ให้ถูกต้องเมื่อกลับมาบันทึกใหม่
+            $insReading = $db->prepare("
+                INSERT INTO meter_readings (meter_id, room_id, billing_month, previous_reading, current_reading, unit_price, image_path, recorded_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE previous_reading = VALUES(previous_reading), current_reading = VALUES(current_reading),
+                                        unit_price = VALUES(unit_price), image_path = COALESCE(VALUES(image_path), image_path),
+                                        recorded_by = VALUES(recorded_by)
+            ");
+
+            // เดือนแรกที่เริ่มใช้ระบบยังไม่มีประวัติ ให้แอดมินกรอกเลขตั้งต้นเองได้
+            // (ใช้เฉพาะตอนที่ยังไม่มีค่าเดือนก่อนในระบบ เพื่อไม่ให้เขียนทับประวัติจริง)
+            $waterPrevInput    = (float)($_POST['water_previous'] ?? 0);
+            $electricPrevInput = (float)($_POST['electric_previous'] ?? 0);
+
             if ($waterReading > 0) {
-                $waterMeter = $db->prepare("SELECT id FROM meters WHERE room_id = ? AND meter_type = 'water'");
-                $waterMeter->execute([$roomId]);
-                $waterMeterId = $waterMeter->fetchColumn();
-
-                if ($waterMeterId) {
-                    $prev = $db->prepare("SELECT current_reading FROM meter_readings WHERE meter_id = ? AND billing_month = ?");
-                    $prev->execute([$waterMeterId, $prevMonth]);
-                    $waterPrev = $prev->fetchColumn() ?: 0;
-
-                    $db->prepare("
-                        INSERT INTO meter_readings (meter_id, room_id, billing_month, previous_reading, current_reading, unit_price, image_path, recorded_by)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE current_reading = VALUES(current_reading), unit_price = VALUES(unit_price),
-                                                image_path = COALESCE(VALUES(image_path), image_path), recorded_by = VALUES(recorded_by)
-                    ")->execute([$waterMeterId, $roomId, $billingMonth, $waterPrev, $waterReading, $waterRate, $waterPhotoPath, $_SESSION['user_id']]);
-                }
+                $waterMeterId = getOrCreateMeterId($db, $roomId, 'water');
+                $hist = getPreviousReading($db, $roomId, 'water', $billingMonth);
+                $waterPrev = $hist['month'] !== null ? $hist['reading'] : $waterPrevInput;
+                $insReading->execute([$waterMeterId, $roomId, $billingMonth, $waterPrev, $waterReading, $waterRate, $waterPhotoPath, $_SESSION['user_id']]);
             }
 
-            // Save electric reading
             if ($electricReading > 0) {
-                $electricMeter = $db->prepare("SELECT id FROM meters WHERE room_id = ? AND meter_type = 'electric'");
-                $electricMeter->execute([$roomId]);
-                $electricMeterId = $electricMeter->fetchColumn();
-
-                if ($electricMeterId) {
-                    $prev = $db->prepare("SELECT current_reading FROM meter_readings WHERE meter_id = ? AND billing_month = ?");
-                    $prev->execute([$electricMeterId, $prevMonth]);
-                    $electricPrev = $prev->fetchColumn() ?: 0;
-
-                    $db->prepare("
-                        INSERT INTO meter_readings (meter_id, room_id, billing_month, previous_reading, current_reading, unit_price, image_path, recorded_by)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                        ON DUPLICATE KEY UPDATE current_reading = VALUES(current_reading), unit_price = VALUES(unit_price),
-                                                image_path = COALESCE(VALUES(image_path), image_path), recorded_by = VALUES(recorded_by)
-                    ")->execute([$electricMeterId, $roomId, $billingMonth, $electricPrev, $electricReading, $electricRate, $electricPhotoPath, $_SESSION['user_id']]);
-                }
+                $electricMeterId = getOrCreateMeterId($db, $roomId, 'electric');
+                $hist = getPreviousReading($db, $roomId, 'electric', $billingMonth);
+                $electricPrev = $hist['month'] !== null ? $hist['reading'] : $electricPrevInput;
+                $insReading->execute([$electricMeterId, $roomId, $billingMonth, $electricPrev, $electricReading, $electricRate, $electricPhotoPath, $_SESSION['user_id']]);
             }
 
             // บันทึกค่าใช้จ่ายเพิ่มเติม — ฟอร์มส่งรายการทั้งหมดของรอบเดือนมา จึงเขียนทับทั้งชุด
